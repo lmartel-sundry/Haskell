@@ -10,11 +10,9 @@ toDigitsRev n = reverse (toDigits n)
 -- Exercise 2
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther [] = []
-doubleEveryOther xs = skipLast xs where
-    skipLast [] = []
-    skipLast ys = doubleLast (init ys) ++ [last ys]
+doubleEveryOther xs = doubleLast (init xs) ++ [last xs] where
     doubleLast [] = []
-    doubleLast ys = skipLast (init ys) ++ [2 * last ys]
+    doubleLast ys = doubleEveryOther (init ys) ++ [2 * last ys]
    
 -- Exercise 3
 sumDigits :: [Integer] -> Integer
@@ -22,7 +20,14 @@ sumDigits xs = sum $ map (sum . toDigits) xs
 
 -- Exercise 4
 validate :: Integer -> Bool
-validate x = (sumDigits . doubleEveryOther . toDigits $ x) `mod` 10 == 0
+validate x = length (show x) == 16 && (sumDigits . doubleEveryOther . toDigits $ x) `mod` 10 == 0
+
+-- Exercise 5
+type Peg = String
+type Move = (Peg, Peg)
+hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+hanoi 1 a b _ = [(a, b)]
+hanoi n a b c = hanoi (n - 1) a c b ++ (a, b) : hanoi (n - 1) c b a
 
 -- Tests
 assert :: (Show a, Eq a) => a -> a -> IO ()
@@ -46,4 +51,6 @@ main = do
     -- Exercise 4
     assert (validate 4012888888881881) True
     assert (validate 4012888888881882) False
-
+    assert (validate 0) False
+    -- Exercise 5
+    assert (hanoi 2 "a" "b" "c") [("a","c"), ("a","b"), ("c","b")]
