@@ -1,3 +1,5 @@
+import Test
+
 -- Exercise 1
 toDigits :: Integer -> [Integer]
 toDigits n
@@ -30,11 +32,6 @@ hanoi 1 a b _ = [(a, b)]
 hanoi n a b c = hanoi (n - 1) a c b ++ (a, b) : hanoi (n - 1) c b a
 
 -- Tests
-assert :: (Show a, Eq a) => a -> a -> IO ()
-assert got expected
-    | got /= expected   = putStrLn $ "TEST FAILED: EXPECTED " ++ show expected ++ ", GOT " ++ show got
-    | otherwise         = putStrLn $ "Test passed. Got " ++ show got
-
 main :: IO ()
 main = do   
     -- Exercise 1
