@@ -42,8 +42,6 @@ foldTree xs = foldr put Leaf xs
             | otherwise            = Node (1 + height insRight) l d insRight
                 where insLeft = put x l
                       insRight = put x r
-          
--- TODO
 
 -- Exercise 3
 xor :: [Bool] -> Bool
