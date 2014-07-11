@@ -23,6 +23,27 @@ fun2' = sum . filter even . takeWhile (>1) . iterate hailstone
             | otherwise = 3 * n + 1
 
 -- Exercise 2
+data Tree a = Leaf
+            | Node Integer (Tree a) a (Tree a)
+    deriving (Show, Eq)
+
+treeHeight :: Tree a -> Integer
+treeHeight Leaf = -1
+treeHeight (Node h _ _ _) = h
+
+foldTree :: [a] -> Tree a
+foldTree xs = foldr put Leaf xs
+    where count Leaf = 0
+          count (Node _ l _ r) = count l + 1 + count r
+
+          height n = floor $ logBase 2 n
+        
+          put :: a -> Tree a -> Tree a
+          put x Leaf = Node 0 Leaf x Leaf
+          put x (Node _ l d r)
+            | height (count l) <= height (count r)  = Node (1 + ( height $ count l + 1)) (put x l) d r
+            | otherwise                             = Node (1 + ( height $ count r + 1)) l d (put x r)
+          
 -- TODO
 
 -- Exercise 3
@@ -43,8 +64,10 @@ main = do
     assert (fun2 5) (fun2' 5)
     assert (fun2 11) (fun2' 11)
 
-    -- Exercise 2
-    -- TODO
+    -- Exercise 2: Test mostly by eye
+    putStrLn . show $ foldTree "AB"
+    putStrLn . show $ foldTree "ABCDEFGHIJ"
+    assert (treeHeight $ foldTree "ABCDEFGHIJ") 3
     
     -- Exercise 3
     assert (xor [False, True, False]) True
