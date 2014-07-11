@@ -33,16 +33,15 @@ treeHeight (Node h _ _ _) = h
 
 foldTree :: [a] -> Tree a
 foldTree xs = foldr put Leaf xs
-    where count Leaf = 0
-          count (Node _ l _ r) = count l + 1 + count r
+    where height Leaf = -1
+          height (Node h _ _ _) = h
 
-          height n = floor $ logBase 2 n
-        
-          put :: a -> Tree a -> Tree a
           put x Leaf = Node 0 Leaf x Leaf
           put x (Node _ l d r)
-            | height (count l) <= height (count r)  = Node (1 + (height $ count l + 1)) (put x l) d r
-            | otherwise                             = Node (1 + (height $ count r + 1)) l d (put x r)
+            | height l <= height r = Node (1 + height insLeft) insLeft d r
+            | otherwise            = Node (1 + height insRight) l d insRight
+                where insLeft = put x l
+                      insRight = put x r
           
 -- TODO
 
