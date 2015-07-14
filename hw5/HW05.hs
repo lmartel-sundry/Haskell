@@ -10,6 +10,7 @@ import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
 import Data.Bits (xor)
 import Data.List (sortBy)
+import Control.Applicative
 
 import Parser
 
@@ -35,9 +36,7 @@ decryptWithKey key outfile = do
 -- Exercise 3 -----------------------------------------
 
 parseFile :: FromJSON a => FilePath -> IO (Maybe a)
-parseFile infile = do
-  rawIds <- BS.readFile infile
-  return $ decode rawIds
+parseFile infile = decode <$> BS.readFile infile
 
 -- Exercise 4 -----------------------------------------
 
